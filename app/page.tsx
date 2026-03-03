@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Servicios from './servicios';
+import QuienesSomos from './quieneSomos';
 
 // --- CONFIGURACIÓN DE PREGUNTAS DEL TEST PARA CALCULAR EL PERFIL DE RIESGO ---
 const PREGUNTAS = [
@@ -60,6 +62,45 @@ const PREGUNTAS = [
   }
 ];
 
+// --- CONFIGURACIÓN DEL CARRUSEL DE IMAGENES ---
+const SLIDES = [
+  {
+    id: 1,
+    imagen: "/leon-gold.jpg",
+    titulo: "Inversiones Inteligentes para un Futuro Sostenible",
+    subtitulo: "Donde la Tecnología y la Estrategia Maximizan tu Capital",
+    size: '45%' 
+  },
+  {
+    id: 2,
+    imagen: "/imag-1.jpg", //
+    titulo: "Interés compuesto",
+    subtitulo: "El interés compuesto es la recompensa para quienes saben esperar lo que otros quieren hoy",
+    size: 'cover'
+  },
+  {
+    id: 3,
+    imagen: "/imag-2.jpg",
+    titulo: "Decisiones de Valor",
+    subtitulo: "Tu futuro financiero comienza con una decisión hoy.",
+    size: 'cover'
+  },
+  {
+    id: 4,
+    imagen: "/imag-3.jpg",
+    titulo: "Conocimiento Aplicado",
+    subtitulo: "Invertir en conocimiento produce los mejores intereses.",
+    size: 'cover'
+  },
+  {
+    id: 5,
+    imagen: "/imag-4.jpg",
+    titulo: "Seguridad Patrimonial",
+    subtitulo: "Liderazgo y estrategia para proteger tu patrimonio.",
+    size: 'cover'
+  }
+];
+
 export default function Home() {
   const [showModal, setShowModal] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
@@ -67,6 +108,21 @@ export default function Home() {
   const [loading, setLoading] = useState(false); // Estado para la simulación de IA
   const [formData, setFormData] = useState({ nombre: '', correo: '', respuestas: {} });
   const router = useRouter();
+
+  // --- LÓGICA DEL CARRUSEL ---
+  const [currentSlide, setCurrentSlide] = React.useState(0);
+
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev === SLIDES.length - 1 ? 0 : prev + 1));
+    }, 5000); // Cambia cada 5 segundos
+    return () => clearInterval(timer);
+  }, []);
+
+  
+
+  const [isLoggingIn, setIsLoggingIn] = useState(false); // para ver la configuración del boton de inicio de sesión
+  const [loginData, setLoginData] = useState({ user: '', pass: '' }); // es para simular las credenciales del admin para redirigirlo al crm
 
   const obtenerPerfil = () => {
     const total = Object.values(formData.respuestas).reduce((a, b) => (a as number) + (b as number), 0);
@@ -85,7 +141,7 @@ export default function Home() {
     
     // Simulamos 2 segundos de cálculo de IA antes de redirigir a la pestaña de page.tsx en la carpeta dashboard
     setTimeout(() => {
-      setLoading(false);
+      setLoading(false); 
       router.push('/dashboard');
     }, 2500);
   };
@@ -93,6 +149,7 @@ export default function Home() {
   const cerrarModal = () => {
     setShowModal(false);
     setIsRegistering(false);
+    setIsLoggingIn(false); 
     setStep(0);
     setLoading(false);
   };
@@ -100,37 +157,79 @@ export default function Home() {
   return (
     <div style={{ backgroundColor: '#000', color: 'white', fontFamily: "'Times New Roman', serif", scrollBehavior: 'smooth' }}>
       
-      {/* SECCIÓN 1: PORTADA */}
-      <div style={{
-        backgroundImage: 'linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url("/leon-gold.jpg")',
-        backgroundSize: '45%', backgroundRepeat: 'no-repeat', backgroundPosition: 'center',
-        minHeight: '100vh', display: 'flex', flexDirection: 'column'
-      }}>
-        <nav style={navStyle}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-            <img src="/leon-gold.jpg" alt="Logo" style={{ width: '45px', borderRadius: '50%', border: '1px solid #D4AF37' }} />
-            <div>
-              <div style={{ fontSize: '22px', fontWeight: 'bold', color: '#D4AF37' }}>Lion Heart</div>
-              <div style={{ fontSize: '11px', letterSpacing: '3px', color: '#c5a059' }}>CAPITAL S.A.S</div>
-            </div>
-          </div>
-          <div style={{ display: 'flex', gap: '35px', fontSize: '15px', alignItems: 'center' }}>
-            <a href="#quienes-somos" style={{ color: '#f3e5ab', textDecoration: 'none' }}>¿Quiénes somos?</a>
-            <a href="#nosotros" style={{ color: 'white', textDecoration: 'none' }}>Misión & Visión</a>
-            <button onClick={() => setShowModal(true)} style={goldButtonStyle}> Acceder </button>
-          </div>
-        </nav>
+      {/* SECCIÓN 1: PORTADA CON CARRUSEL */}
+<div style={{ position: 'relative', minHeight: '100vh', overflow: 'hidden', backgroundColor: '#000' }}>
+  
+  {/* CAPA DE IMÁGENES (CARRUSEL) */}
+  {SLIDES.map((slide, index) => (
+    <div
+      key={slide.id}
+      style={{
+        position: 'absolute',
+        top: 0, left: 0, width: '100%', height: '100%',
+        backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url("${slide.imagen}")`,
+        backgroundSize: slide.size,
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+        transition: 'opacity 1.5s ease-in-out', // Transición suave de desvanecimiento
+        opacity: currentSlide === index ? 1 : 0,
+        zIndex: currentSlide === index ? 1 : 0,
+      }}
+    />
+  ))}
 
-        <main style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
-          <h1 style={{ fontSize: '65px', color: '#f3e5ab', textShadow: '2px 2px 15px black' }}>
-            Inversiones Inteligentes para <br /> un Futuro Sostenible
-          </h1>
-          <p style={{ fontSize: '22px', color: '#ddd', fontStyle: 'italic', marginBottom: '40px' }}>
-            Donde la Tecnología y la Estrategia Maximizan tu Capital
-          </p>
-          <button onClick={() => setShowModal(true)} style={outlineButtonStyle}> EMPIEZA AHORA </button>
-        </main>
+  {/* CONTENIDO FIJO (NAV Y TEXTOS SOBRE LAS FOTOS) */}
+  <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    
+    {/* NAV  */}
+    <nav style={navStyle}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+        <img src="/leon-gold.jpg" alt="Logo" style={{ width: '45px', borderRadius: '50%', border: '1px solid #D4AF37' }} />
+        <div>
+          <div style={{ fontSize: '22px', fontWeight: 'bold', color: '#D4AF37' }}>Lion Heart</div>
+          <div style={{ fontSize: '11px', letterSpacing: '3px', color: '#c5a059' }}>CAPITAL S.A.S</div>
+        </div>
       </div>
+      <div style={{ display: 'flex', gap: '35px', fontSize: '15px', alignItems: 'center' }}>
+        <a href="#quienes-somos" style={{ color: '#f3e5ab', textDecoration: 'none' }}>¿Quiénes somos?</a>
+        <a href="#servicios" style={{ color: '#f3e5ab', textDecoration: 'none' }}>Nuestros Servicios</a>
+        <a href="#nosotros" style={{ color: '#f3e5ab', textDecoration: 'none' }}>Nosotros</a>
+        <button onClick={() => setShowModal(true)} style={goldButtonStyle}> Acceder </button>
+      </div>
+    </nav>
+
+    {/* TEXTO DINÁMICO SEGÚN EL SLIDE */}
+    <main style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '0 20px' }}>
+      <h1 style={{ 
+        fontSize: '65px', 
+        color: '#f3e5ab', 
+        textShadow: '2px 2px 15px black',
+        transition: 'all 0.5s ease' 
+      }}>
+        {SLIDES[currentSlide].titulo}
+      </h1>
+      <p style={{ fontSize: '22px', color: '#ddd', fontStyle: 'italic', marginBottom: '40px' }}>
+        {SLIDES[currentSlide].subtitulo}
+      </p>
+      <button onClick={() => setShowModal(true)} style={outlineButtonStyle}> EMPIEZA AHORA </button>
+      
+      {/* INDICADORES (PUNTITOS) ABAJO */}
+      <div style={{ display: 'flex', gap: '10px', marginTop: '30px' }}>
+        {SLIDES.map((_, i) => (
+          <div 
+            key={i} 
+            onClick={() => setCurrentSlide(i)}
+            style={{ 
+              width: '10px', height: '10px', borderRadius: '50%', 
+              backgroundColor: currentSlide === i ? '#D4AF37' : '#555',
+              cursor: 'pointer', transition: '0.3s'
+            }} 
+          />
+        ))}
+      </div>
+    </main>
+  </div>
+</div>
 
       {/* --- VENTANA MODAL --- */}
       {showModal && (
@@ -164,12 +263,57 @@ export default function Home() {
                 </div>
 
                 {!isRegistering ? (
-                  <div style={{ textAlign: 'center' }}>
-                    <p style={{ color: '#aaa', fontSize: '14px', marginBottom: '30px' }}>Bienvenido a su terminal de inversión</p>
-                    <button style={goldActionButton}> Iniciar Sesión </button>
-                    <button onClick={() => setIsRegistering(true)} style={outlineActionButton}> Crear Cuenta Nueva </button>
-                  </div>
-                ) : (
+  <div style={{ textAlign: 'center' }}>
+    {!isLoggingIn ? (
+      <>
+        <p style={{ color: '#aaa', fontSize: '14px', marginBottom: '30px' }}>Bienvenido a su terminal de inversión</p>
+        {/* Al hacer clic, activamos el modo login */}
+        <button onClick={() => setIsLoggingIn(true)} style={goldActionButton}> Iniciar Sesión </button>
+        <button onClick={() => setIsRegistering(true)} style={outlineActionButton}> Crear Cuenta Nueva </button>
+      </>
+    ) : (
+      /* FORMULARIO DE LOGIN SIMULADO */
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+        <h3 style={{ color: '#D4AF37' }}>Acceso Administrativo</h3>
+        <input 
+          placeholder="Usuario" 
+          style={inputStyle} 
+          onChange={(e) => setLoginData({...loginData, user: e.target.value})} 
+        />
+        <input 
+          type="password" 
+          placeholder="Contraseña" 
+          style={inputStyle} 
+          onChange={(e) => setLoginData({...loginData, pass: e.target.value})} 
+        />
+        <button 
+          onClick={() => {
+            if (loginData.user === 'admin' && loginData.pass === '123') {
+              setLoading(true);
+              setTimeout(() => {
+                router.push('dashboard');
+              }, 1500);
+            } else {
+              alert("Credenciales incorrectas");
+            }
+          }} 
+          style={goldActionButton}
+        > 
+          ENTRAR AL SISTEMA 
+        </button>
+        <button 
+          onClick={() => setIsLoggingIn(false)} 
+          style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer', fontSize: '12px' }}
+        > 
+          Volver atrás 
+        </button>
+      </div>
+    )}
+  </div>
+) : (
+  
+
+
                   <div>
                     {step === 0 && (
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
@@ -216,24 +360,12 @@ export default function Home() {
       )}
 
       {/* SECCION de quienes somos */}
-      <section id="quienes-somos" style={sectionContainerStyle}>
-        <div style={infoCardStyle}>
-           <h2 style={sectionTitleStyle}>¿Quiénes somos?</h2>
-           <p style={paragraphStyle}>
-             Somos <strong>Lion Heart Capital S.A.S.</strong>, una firma colombiana especializada en gestión de inversiones, consultoría financiera y planificación patrimonial. Nuestro enfoque es ayudar a personas y empresas a invertir de forma estructurada, transparente y alineada a su perfil de riesgo, combinando activos tradicionales (acciones, ETFs, renta fija) con alternativas como inmobiliario fraccionado y criptoactivos, siempre bajo criterios de gestión responsable.
-            </p>
-            <h3 style={{ color: '#D4AF37', fontSize: '24px', marginBottom: '20px' }}>Nos diferenciamos porque:</h3>
-            <ul style={{ listStyle: 'none', padding: 0, fontSize: '17px', color: '#ddd', lineHeight: '2.5' }}>
-              <li><span style={{ color: '#D4AF37' }}>✔</span> No vendemos promesas, construimos estrategias.</li>
-              <li><span style={{ color: '#D4AF37' }}>✔</span> Adaptamos cada portafolio al perfil del cliente.</li>
-              <li><span style={{ color: '#D4AF37' }}>✔</span> Acompañamiento continuo y educación financiera.</li>
-              <li><span style={{ color: '#D4AF37' }}>✔</span> Priorizamos la educación financiera, para que el cliente entienda qué tiene, por qué lo tiene y qué esperar.</li>
-            <p style={{ fontSize: '19px', lineHeight: '1.8', color: '#eee', marginBottom: '30px', textAlign: 'center' }}>
-              En <strong>Lion Heart Capital S.A.S.</strong>, creemos que invertir bien no es tomar más riesgo, sino tomar decisiones mejor informadas.
-            </p>
-            </ul>
-          </div>
-        </section>
+      
+        <QuienesSomos />
+      
+
+        {/* Debajo de la portada o donde quieras que aparezca */}
+        <Servicios />
         
 
         {/* SECCION de Misión y visión  */}
@@ -273,3 +405,7 @@ const infoCardStyle = { backgroundColor: 'rgba(0,0,0,0.75)', padding: '60px', bo
 const sectionTitleStyle = { color: '#D4AF37', fontSize: '40px', marginBottom: '30px', textAlign: 'center' as const };
 const paragraphStyle = { fontSize: '19px', lineHeight: '1.8', color: '#eee', textAlign: 'center' as const };
 const footerStyle = { padding: '60px', textAlign: 'center' as const, color: '#777', backgroundColor: '#000', borderTop: '1px solid #111' };
+
+
+
+
