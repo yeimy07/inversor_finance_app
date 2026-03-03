@@ -1,6 +1,6 @@
 'use client';
 import { useSearchParams, useRouter } from 'next/navigation';
-import React from 'react';
+import React, { Suspense } from 'react';
 
 // --- CONFIGURACIÓN DE FRASES MOTIVADORAS ---
 const FRASES = [
@@ -10,7 +10,8 @@ const FRASES = [
   "Estrategia sobre impulso. En Lion Heart Capital, no vendemos promesas, construimos legados sostenibles."
 ];
 
-export default function ContactoServicio() {
+// Componente que contiene la lógica y el formulario
+function ContactoContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const servicio = searchParams.get('servicio') || 'Servicio Especializado';
@@ -87,7 +88,20 @@ export default function ContactoServicio() {
   );
 }
 
-// --- ESTILOS CORREGIDOS Y UNIFICADOS ---
+// COMPONENTE PRINCIPAL QUE EXPORTA NEXT.JS
+export default function ContactoServicio() {
+  return (
+    <Suspense fallback={
+      <div style={{ backgroundColor: '#000', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#D4AF37' }}>
+        Cargando formulario de Lion Heart Capital...
+      </div>
+    }>
+      <ContactoContent />
+    </Suspense>
+  );
+}
+
+// --- ESTILOS ---
 
 const pageWrapperStyle: React.CSSProperties = {
   minHeight: '100vh',
