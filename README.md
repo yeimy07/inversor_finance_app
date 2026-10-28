@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Lion Heart Capital: plataforma de inversión inteligente 🦁
 
-## Getting Started
+![Next.js](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs&logoColor=white)
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-3FCF8E?logo=supabase&logoColor=white)
 
-First, run the development server:
+SaaS orientado a **democratizar la educación financiera y la gestión de activos**. Además de mostrar inversiones, la plataforma busca funcionar como un **asesor inteligente**: perfila al usuario según su tolerancia al riesgo y le recomienda estrategias acordes a ese perfil.
+
+> **Estado:** MVP en desarrollo. El sitio institucional y la página de contacto por servicio están listos; el dashboard del inversionista es una maqueta con datos simulados.
+
+## Funcionalidades
+
+| Sección | Ruta | Estado |
+|---|---|---|
+| **Landing** con carrusel, misión y visión | `/` | ✅ Lista |
+| **¿Quiénes somos?** y **Servicios** | `/#quienes-somos`, `/#servicios` | ✅ Lista |
+| **Contacto por servicio** (el servicio elegido llega por query string) | `/contacto?servicio=…` | ✅ Lista |
+| **Dashboard del inversionista** (portafolio, perfil, menú de módulos) | `/dashboard` | 🧪 Maqueta |
+| Perfilamiento de riesgo, IA Advisor, juegos financieros | — | 🗺️ Planeado |
+
+## Tecnologías
+
+- **Next.js 16** (App Router) + **React 19**
+- **TypeScript** con validación estricta en el build
+- **Tailwind CSS 4**
+- **Supabase** como backend (cliente en `lib/supabase.ts`)
+
+## Cómo ejecutarlo
+
+Requisitos: Node.js 20 o superior.
 
 ```bash
+git clone https://github.com/yeimy07/inversor_finance_app.git
+cd inversor_finance_app
+npm install
+cp .env.example .env.local   # completa con las credenciales de tu proyecto Supabase
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abre [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Variables de entorno
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Variable | Descripción |
+|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | URL del proyecto en Supabase |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Clave pública (*anon*) del proyecto |
 
-## Learn More
+### Scripts
 
-To learn more about Next.js, take a look at the following resources:
+| Comando | Acción |
+|---|---|
+| `npm run dev` | Servidor de desarrollo |
+| `npm run build` | Build de producción (incluye verificación de tipos) |
+| `npm start` | Sirve el build de producción |
+| `npm run lint` | ESLint |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Estructura
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+inversor_finance_app/
+├── app/
+│   ├── page.tsx          # Landing: carrusel, misión y visión
+│   ├── quieneSomos.tsx   # Sección "¿Quiénes somos?"
+│   ├── servicios.tsx     # Tarjetas de servicios → /contacto
+│   ├── contacto/         # Página de contacto por servicio
+│   ├── dashboard/        # Panel del inversionista (maqueta)
+│   └── layout.tsx
+├── lib/supabase.ts       # Cliente de Supabase
+└── public/               # Imágenes y logotipos
+```
 
-## Deploy on Vercel
+## Hoja de ruta
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- [ ] Cuestionario de perfil de riesgo (conservador / moderado / agresivo) guardado en Supabase.
+- [ ] Autenticación de usuarios.
+- [ ] Dashboard con datos reales de mercado (café, oro, índices).
+- [ ] Módulo de recomendaciones con IA según el perfil.
+- [ ] Diseño responsive para móvil.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Despliegue
+
+El proyecto está preparado para desplegarse en [Vercel](https://vercel.com/): importa el repositorio y configura las variables de entorno de Supabase.
+
+## Autora
+
+**Yeimy Alejandra Sánchez Gil**, ingeniera informática · Medellín, Colombia
+[GitHub @yeimy07](https://github.com/yeimy07)

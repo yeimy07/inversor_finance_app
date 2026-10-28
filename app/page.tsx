@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import Servicios from './servicios';
 import QuienesSomos from './quieneSomos';
 
@@ -14,16 +13,8 @@ const SLIDES = [
   { id: 5, imagen: "/imag-4.jpg", titulo: "Seguridad Patrimonial", subtitulo: "Liderazgo y estrategia para proteger tu patrimonio.", size: 'cover' }
 ];
 
-// Asumiendo que PREGUNTAS está definido en otro lugar o aquí, lo mantengo como referencia lógica
-const PREGUNTAS = []; 
-
 export default function Home() {
-  const [showModal, setShowModal] = useState(false);
-  const [step, setStep] = useState(0); 
-  const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({ nombre: '', correo: '', respuestas: {} });
   const [currentSlide, setCurrentSlide] = useState(0);
-  const router = useRouter();
 
   // --- LÓGICA DEL CARRUSEL ---
   useEffect(() => {
@@ -79,7 +70,7 @@ export default function Home() {
             <p style={{ fontSize: '22px', color: '#ddd', fontStyle: 'italic', marginBottom: '40px' }}>
               {SLIDES[currentSlide].subtitulo}
             </p>
-            <button onClick={() => setShowModal(true)} style={outlineButtonStyle}> EMPIEZA AHORA </button>
+            <a href="#servicios" style={outlineButtonStyle}> EMPIEZA AHORA </a>
             
             <div style={{ display: 'flex', gap: '10px', marginTop: '30px' }}>
               {SLIDES.map((_, i) => (
@@ -87,7 +78,7 @@ export default function Home() {
                   key={i} 
                   onClick={() => setCurrentSlide(i)}
                   style={{ 
-                    width: '100px', height: '10px', borderRadius: '50%', 
+                    height: '10px', borderRadius: '50%',
                     backgroundColor: currentSlide === i ? '#D4AF37' : '#555',
                     cursor: 'pointer', transition: '0.3s', width: '10px'
                   }} 
@@ -123,15 +114,9 @@ export default function Home() {
 
 // --- ESTILOS ---
 const navStyle = { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 60px', backgroundColor: 'rgba(0,0,0,0.85)', borderBottom: '1px solid #D4AF37' };
-const outlineButtonStyle = { background: 'transparent', border: '2px solid #D4AF37', padding: '18px 50px', color: '#D4AF37', fontSize: '18px', fontWeight: 'bold', cursor: 'pointer' };
-const modalOverlayStyle = { position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.95)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000, backdropFilter: 'blur(10px)' };
-const modalContentStyle = { backgroundColor: '#0a0a0a', padding: '40px', borderRadius: '15px', border: '1px solid #D4AF37', width: '450px', position: 'relative' };
-const goldActionButton = { width: '100%', padding: '12px', borderRadius: '5px', border: 'none', background: '#D4AF37', color: 'black', fontWeight: 'bold', cursor: 'pointer' };
-const inputStyle = { padding: '12px', borderRadius: '5px', border: '1px solid #333', background: '#111', color: 'white', outline: 'none' };
-const optionButtonStyle = { padding: '15px', textAlign: 'left', borderRadius: '8px', border: '1px solid #222', background: '#151515', color: '#ddd', cursor: 'pointer' };
-const closeButtonStyle = { position: 'absolute', top: '15px', right: '15px', background: 'none', border: 'none', color: '#D4AF37', fontSize: '20px', cursor: 'pointer' };
+const outlineButtonStyle = { background: 'transparent', border: '2px solid #D4AF37', padding: '18px 50px', color: '#D4AF37', fontSize: '18px', fontWeight: 'bold', cursor: 'pointer', textDecoration: 'none' };
 const cardStyle = { padding: '45px', backgroundColor: 'rgba(15, 15, 15, 0.8)', borderRadius: '15px', border: '1px solid rgba(212, 175, 55, 0.3)', backdropFilter: 'blur(10px)' };
 const titleUnderline = { color: '#D4AF37', borderBottom: '1px solid #D4AF37', display: 'inline-block', marginBottom: '20px' };
-const cardTextStyle = { fontSize: '16px', lineHeight: '1.8', textAlign: 'justify' };
+const cardTextStyle = { fontSize: '16px', lineHeight: '1.8', textAlign: 'justify' as const };
 
 
